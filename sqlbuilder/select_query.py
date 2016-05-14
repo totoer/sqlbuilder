@@ -32,7 +32,7 @@ class C(object):
 
     def IN(self, target, field=None):
         second = self._get_target(target, field)
-        return "{} in {}".format(self._first, second)
+        return "{} IN {}".format(self._first, second)
 
     def TS(self, target, field=None):
         second = self._get_target(target, field)
@@ -107,6 +107,12 @@ class SELECT(object):
         self._limit = None
         self._offset = None
 
+    def WITH(self, *selects):
+        pass
+
+    def WITH_RECURSIVE(self, ):
+        pass
+
     def FROM(self, schema, table_name):
         self._from = "FROM {}.{} AS {}".format(
             schema, table_name, table_name)
@@ -167,10 +173,12 @@ class SELECT(object):
                 fields = []
                 for item in self._fields:
                     if isinstance(item, tuple) and len(item) == 2:
-                        fields.append("{}.{} AS {}".format(item[0], item[1], item[1])
+                        fields.append(
+                            "{}.{} AS {}".format(item[0], item[1], item[1]))
 
                     elif isinstance(item, tuple) and len(item) == 3:
-                        fields.append("{}.{} AS {}".format(item[0], item[1], item[2])
+                        fields.append(
+                            "{}.{} AS {}".format(item[0], item[1], item[2]))
 
                     else:
                         fields.append(item)
@@ -189,16 +197,20 @@ class SELECT(object):
                     "WHERE {}".format(" AND ".join(self._conditions)))
 
             if self._group_by is not None:
-                sql_seq.append("GROUP BY {}".self._group_by)
+                sql_seq.append(
+                    "GROUP BY {}".format(self._group_by))
 
             if self._order_by is not None:
-                sql_seq.append("ORDER BY {}".self._order_by)
+                sql_seq.append(
+                    "ORDER BY {}".format(self._order_by))
 
             if self._offset is not None:
-                sql_seq.append("OFFSET {}".self._offset)
+                sql_seq.append(
+                    "OFFSET {}".format(self._offset))
 
             if self._limit is not None:
-                sql_seq.append("LIMIT {}".self._limit)
+                sql_seq.append(
+                    "LIMIT {}".format(self._limit))
 
             return " ".join(sql_seq)
 
