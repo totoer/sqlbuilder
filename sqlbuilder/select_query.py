@@ -216,3 +216,7 @@ class SELECT(object):
 
         else:
             raise Exception()
+
+    @property
+    def sql(self):
+        return self.__str__()
