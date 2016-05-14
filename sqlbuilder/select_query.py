@@ -44,6 +44,11 @@ class C(object):
         return u"{} LIKE {}".format(
             self._first, second)
 
+    def ILIKE(self, target, field=None):
+        second = self._get_target(target, field)
+        return u"{} ILIKE {}".format(
+            self._first, second)
+
     def IS_NULL(self):
         return u"{} is null".format(self._first)
 
