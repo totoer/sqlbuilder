@@ -178,8 +178,9 @@ class SELECT(object):
 
             sql_seq.extend(self._joins)
 
-            sql_seq.append(
-                "WHERE {}".format(" AND ".join(self._conditions)))
+            if self._conditions:
+                sql_seq.append(
+                    "WHERE {}".format(" AND ".join(self._conditions)))
 
             if self._group_by is not None:
                 sql_seq.append("GROUP BY {}".self._group_by)
