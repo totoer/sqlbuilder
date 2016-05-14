@@ -166,8 +166,14 @@ class SELECT(object):
             if self._fields:
                 fields = []
                 for item in self._fields:
-                    fields.append("{}.{} AS {}".format(item[0], item[1], item[1]) \
-                        if isinstance(item, tuple) else item)
+                    if isinstance(item, tuple) and len(item) == 2:
+                        fields.append("{}.{} AS {}".format(item[0], item[1], item[1])
+
+                    elif isinstance(item, tuple) and len(item) == 3:
+                        fields.append("{}.{} AS {}".format(item[0], item[1], item[2])
+
+                    else:
+                        fields.append(item)
 
                 sql_seq.append(", ".join(fields))
 
