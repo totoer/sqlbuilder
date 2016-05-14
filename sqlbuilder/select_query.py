@@ -4,7 +4,7 @@
 class C(object):
 
     def _get_target(self, target, field=None):
-        return "{}.{}".format(target, field) \
+        return u"{}.{}".format(target, field) \
             if field is not None else target
 
     def __init__(self, target, field=None):
@@ -12,86 +12,86 @@ class C(object):
 
     def LT(self, target, field=None):
         second = self._get_target(target, field)
-        return "{}<{}".format(self._first, second)
+        return u"{}<{}".format(self._first, second)
 
     def GT(self, target, field=None):
         second = self._get_target(target, field)
-        return "{}>{}".format(self._first, second)
+        return u"{}>{}".format(self._first, second)
 
     def LTE(self, target, field=None):
         second = self._get_target(target, field)
-        return "{}<={}".format(self._first, second)
+        return u"{}<={}".format(self._first, second)
 
     def GTE(self, target, field=None):
         second = self._get_target(target, field)
-        return "{}>={}".format(self._first, second)
+        return u"{}>={}".format(self._first, second)
 
     def EQUAL(self, target, field=None):
         second = self._get_target(target, field)
-        return "{}={}".format(self._first, second)
+        return u"{}={}".format(self._first, second)
 
     def IN(self, target, field=None):
         second = self._get_target(target, field)
-        return "{} IN {}".format(self._first, second)
+        return u"{} IN {}".format(self._first, second)
 
     def TS(self, target, field=None):
         second = self._get_target(target, field)
-        return "to_tsvector({}) @@ to_tsquery({})".format(
+        return u"to_tsvector({}) @@ to_tsquery({})".format(
             self._first, second)
 
     def LIKE(self, target, field=None):
         second = self._get_target(target, field)
-        return "{} LIKE {}".format(
+        return u"{} LIKE {}".format(
             self._first, second)
 
     def IS_NULL(self):
-        return "{} is null".format(self._first)
+        return u"{} is null".format(self._first)
 
     def IS_NOT_NULL(self):
-        return "{} is not null".format(self._first)
+        return u"{} is not null".format(self._first)
 
 
 def AND(*conditions):
-    return " AND ".join(conditions)
+    return u" AND ".join(conditions)
 
 
 def OR(*conditions):
-    return " OR ".join(conditions)
+    return u" OR ".join(conditions)
 
 
 def ARRAY_AGG(target, field, alias=None):
     alias = alias or field
-    return "array_agg({}.{}) AS {}".format(
+    return u"array_agg({}.{}) AS {}".format(
         target, field, alias)
 
 
 def AVG(target, field, alias=None):
     alias = alias or field
-    return "avg({}.{}) AS {}".format(
+    return u"avg({}.{}) AS {}".format(
         target, field, alias)
 
 
 def COUNT(target, field, alias=None):
     alias = alias or field
-    return "count({}.{}) AS {}".format(
+    return u"count({}.{}) AS {}".format(
         target, field, alias)
 
 
 def MAX(target, field, alias=None):
     alias = alias or field
-    return "max({}.{}) AS {}".format(
+    return u"max({}.{}) AS {}".format(
         target, field, alias)
 
 
 def MIN(target, field, alias=None):
     alias = alias or field
-    return "min({}.{}) AS {}".format(
+    return u"min({}.{}) AS {}".format(
         target, field, alias)
 
 
 def SUM(target, field, alias=None):
     alias = alias or field
-    return "sum({}.{}) AS {}".format(
+    return u"sum({}.{}) AS {}".format(
         target, field, alias)
 
 
@@ -114,44 +114,44 @@ class SELECT(object):
         pass
 
     def FROM(self, schema, table_name):
-        self._from = "FROM {}.{} AS {}".format(
+        self._from = u"FROM {}.{} AS {}".format(
             schema, table_name, table_name)
 
         return self
 
     def LEFT_JOIN(self, schema, table_name, *conditions):
-        conditions = " AND ".join(conditions)
-        self._joins.append("LEFT JOIN {}.{} AS {} ON {}".format(
+        conditions = u" AND ".join(conditions)
+        self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
             schema, table_name, table_name, conditions))
 
         return self
 
     def RIGHT_JOIN(self, schema, table_name, *conditions):
-        conditions = " AND ".join(conditions)
-        self._joins.append("RIGHT JOIN {}.{} AS {} ON {}".format(
+        conditions = u" AND ".join(conditions)
+        self._joins.append(u"RIGHT JOIN {}.{} AS {} ON {}".format(
             schema, table_name, table_name, conditions))
 
         return self
 
     def CROSS_JOIN(self, schema, table_name, *conditions):
-        conditions = " AND ".join(conditions)
-        self._joins.append("CROSS JOIN {}.{} AS {} ON {}".format(
+        conditions = u" AND ".join(conditions)
+        self._joins.append(u"CROSS JOIN {}.{} AS {} ON {}".format(
             schema, table_name, table_name, conditions))
 
         return self
 
     def WHERE(self, *conditions):
-        self._conditions.append(" AND ".join(conditions))
+        self._conditions.append(u" AND ".join(conditions))
 
         return self
 
     def GROUP_BY(self, *fields):
-        self._group_by = ",".join(fields)
+        self._group_by = u",".join(fields)
 
         return self
 
     def ORDER_BY(self, *fields):
-        self._order_by = ",".join(fields)
+        self._order_by = u",".join(fields)
 
         return self
 
@@ -167,26 +167,26 @@ class SELECT(object):
 
     def __str__(self):
         if self._from is not None:
-            sql_seq = ["SELECT"]
+            sql_seq = [u"SELECT"]
             
             if self._fields:
                 fields = []
                 for item in self._fields:
                     if isinstance(item, tuple) and len(item) == 2:
                         fields.append(
-                            "{}.{} AS {}".format(item[0], item[1], item[1]))
+                            u"{}.{} AS {}".format(item[0], item[1], item[1]))
 
                     elif isinstance(item, tuple) and len(item) == 3:
                         fields.append(
-                            "{}.{} AS {}".format(item[0], item[1], item[2]))
+                            u"{}.{} AS {}".format(item[0], item[1], item[2]))
 
                     else:
                         fields.append(item)
 
-                sql_seq.append(", ".join(fields))
+                sql_seq.append(u", ".join(fields))
 
             else:
-                sql_seq.append("*")
+                sql_seq.append(u"*")
 
             sql_seq.append(self._from)
 
@@ -194,25 +194,25 @@ class SELECT(object):
 
             if self._conditions:
                 sql_seq.append(
-                    "WHERE {}".format(" AND ".join(self._conditions)))
+                    u"WHERE {}".format(" AND ".join(self._conditions)))
 
             if self._group_by is not None:
                 sql_seq.append(
-                    "GROUP BY {}".format(self._group_by))
+                    u"GROUP BY {}".format(self._group_by))
 
             if self._order_by is not None:
                 sql_seq.append(
-                    "ORDER BY {}".format(self._order_by))
+                    u"ORDER BY {}".format(self._order_by))
 
             if self._offset is not None:
                 sql_seq.append(
-                    "OFFSET {}".format(self._offset))
+                    u"OFFSET {}".format(self._offset))
 
             if self._limit is not None:
                 sql_seq.append(
-                    "LIMIT {}".format(self._limit))
+                    u"LIMIT {}".format(self._limit))
 
-            return " ".join(sql_seq)
+            return u" ".join(sql_seq)
 
         else:
             raise Exception()
