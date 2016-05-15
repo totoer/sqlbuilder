@@ -118,9 +118,10 @@ class SELECT(object):
     def WITH_RECURSIVE(self, ):
         pass
 
-    def FROM(self, schema, table_name):
+    def FROM(self, schema, table_name, alias=None):
+        alias = alias or table_name
         self._from = u"FROM {}.{} AS {}".format(
-            schema, table_name, table_name)
+            schema, table_name, alias)
 
         return self
 
