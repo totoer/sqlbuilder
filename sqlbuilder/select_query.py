@@ -112,12 +112,6 @@ class SELECT(object):
         self._limit = None
         self._offset = None
 
-    def WITH(self, *selects):
-        pass
-
-    def WITH_RECURSIVE(self, ):
-        pass
-
     def FROM(self, schema, table_name, alias=None):
         alias = alias or table_name
         self._from = u"FROM {}.{} AS {}".format(
@@ -125,24 +119,45 @@ class SELECT(object):
 
         return self
 
-    def LEFT_JOIN(self, schema, table_name, *conditions):
+    def LEFT_JOIN(self, schema, target, *conditions):
         conditions = u" AND ".join(conditions)
+
+        table_name = target if not isinstance(target, tuple) \
+            else target[0]
+
+        alias = target if not isinstance(target, tuple) \
+            else target[1]
+
         self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, table_name, conditions))
+            schema, table_name, alias, conditions))
 
         return self
 
-    def RIGHT_JOIN(self, schema, table_name, *conditions):
+    def RIGHT_JOIN(self, schema, target, *conditions):
         conditions = u" AND ".join(conditions)
-        self._joins.append(u"RIGHT JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, table_name, conditions))
+
+        table_name = target if not isinstance(target, tuple) \
+            else target[0]
+
+        alias = target if not isinstance(target, tuple) \
+            else target[1]
+        
+        self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
+            schema, table_name, alias, conditions))
 
         return self
 
-    def CROSS_JOIN(self, schema, table_name, *conditions):
+    def CROSS_JOIN(self, schema, target, *conditions):
         conditions = u" AND ".join(conditions)
-        self._joins.append(u"CROSS JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, table_name, conditions))
+
+        table_name = target if not isinstance(target, tuple) \
+            else target[0]
+
+        alias = target if not isinstance(target, tuple) \
+            else target[1]
+        
+        self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
+            schema, table_name, alias, conditions))
 
         return self
 
