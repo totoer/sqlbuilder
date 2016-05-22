@@ -30,6 +30,10 @@ class C(object):
         second = self._get_target(target, field)
         return u"{}={}".format(self._first, second)
 
+    def NOT_EQUAL(self, target, field=None):
+        second = self._get_target(target, field)
+        return u"{}!={}".format(self._first, second)    
+
     def IN(self, target, field=None):
         second = self._get_target(target, field)
         return u"{} IN {}".format(self._first, second)
