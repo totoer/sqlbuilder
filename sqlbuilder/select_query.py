@@ -107,6 +107,7 @@ class SELECT(object):
         self._from = None
         self._joins = []
         self._conditions = []
+        self._having_conditions = []
         self._order_by = None
         self._group_by = None
         self._limit = None
@@ -171,6 +172,11 @@ class SELECT(object):
 
         return self
 
+    def HAVING(self, *conditions):
+        self._having_conditions.append(u" AND ".join(conditions))
+
+        return self
+
     def ORDER_BY(self, *fields):
         self._order_by = u",".join(fields)
 
@@ -220,6 +226,10 @@ class SELECT(object):
             if self._group_by is not None:
                 sql_seq.append(
                     u"GROUP BY {}".format(self._group_by))
+
+            if self._having_conditions:
+                sql_seq.append(
+                    u"HAVING {}".format(" AND ".join(self._having_conditions)))
 
             if self._order_by is not None:
                 sql_seq.append(
