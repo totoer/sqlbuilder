@@ -124,6 +124,20 @@ class SELECT(object):
 
         return self
 
+    def INNER_JOIN(self, schema, target, *conditions):
+        conditions = u" AND ".join(conditions)
+
+        table_name = target if not isinstance(target, tuple) \
+            else target[0]
+
+        alias = target if not isinstance(target, tuple) \
+            else target[1]
+
+        self._joins.append(u"INNER JOIN {}.{} AS {} ON {}".format(
+            schema, table_name, alias, conditions))
+
+        return self
+
     def LEFT_JOIN(self, schema, target, *conditions):
         conditions = u" AND ".join(conditions)
 
