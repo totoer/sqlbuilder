@@ -269,3 +269,21 @@ class SELECT(object):
     @property
     def sql(self):
         return self.__str__()
+
+
+class WITH(object):
+
+    def __init__(self, name, as_query):
+        self._with_querys = []
+        self._with_querys.append((name, as_query.sql,))
+
+    def AS(self, name, as_query):
+        self._with_querys.append((name, as_query.sql,))
+
+    def sql(self, select_query):
+        with_set = ["{} AS ({})".format(query[0], query[1]) \
+            for query in self._with_querys]
+
+        with_sql = ",".join(with_set)
+
+        return "WITH {} {}".format(with_sql, select_query.sql)
