@@ -117,10 +117,15 @@ class SELECT(object):
         self._limit = None
         self._offset = None
 
-    def FROM(self, schema, table_name, alias=None):
-        alias = alias or table_name
-        self._from = u"FROM {}.{} AS {}".format(
-            schema, table_name, alias)
+    def FROM(self, first_arg, table_name=None, alias=None):
+        if table_name is not None:
+            alias = alias or table_name
+            self._from = u"FROM {}.{} AS {}".format(
+                first_arg, table_name, alias)
+
+        else:
+            alias = alias or first_arg
+            self._from = u"FROM {} AS {}".format(first_arg, alias)
 
         return self
 
@@ -271,18 +276,31 @@ class SELECT(object):
         return self.__str__()
 
 
+class UNION(object):
+
+    def __init__(self, *queries):
+        self._queries = queries
+
+    def __str__(self):
+        return " UNION ".join([query.sql for query in self._queries])
+
+    @property
+    def sql(self):
+        return self.__str__()
+
+
 class WITH(object):
 
     def __init__(self, name, as_query):
-        self._with_querys = []
-        self._with_querys.append((name, as_query.sql,))
+        self._with_queries = []
+        self._with_queries.append((name, as_query.sql,))
 
     def AS(self, name, as_query):
-        self._with_querys.append((name, as_query.sql,))
+        self._with_queries.append((name, as_query.sql,))
 
     def sql(self, select_query):
         with_set = ["{} AS ({})".format(query[0], query[1]) \
-            for query in self._with_querys]
+            for query in self._with_queries]
 
         with_sql = ",".join(with_set)
 
