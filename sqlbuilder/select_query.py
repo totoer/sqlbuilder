@@ -138,8 +138,13 @@ class SELECT(object):
         alias = target if not isinstance(target, tuple) \
             else target[1]
 
-        self._joins.append(u"INNER JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, alias, conditions))
+        if schema is None:
+            self._joins.append(u"INNER JOIN {} AS {} ON {}".format(
+                table_name, alias, conditions))
+
+        else:
+            self._joins.append(u"INNER JOIN {}.{} AS {} ON {}".format(
+                schema, table_name, alias, conditions))
 
         return self
 
@@ -152,8 +157,13 @@ class SELECT(object):
         alias = target if not isinstance(target, tuple) \
             else target[1]
 
-        self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, alias, conditions))
+        if schema is None:
+            self._joins.append(u"LEFT JOIN {} AS {} ON {}".format(
+                table_name, alias, conditions))
+
+        else:
+            self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
+                schema, table_name, alias, conditions))
 
         return self
 
@@ -166,8 +176,13 @@ class SELECT(object):
         alias = target if not isinstance(target, tuple) \
             else target[1]
         
-        self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, alias, conditions))
+        if schema is None:
+            self._joins.append(u"LEFT JOIN {} AS {} ON {}".format(
+                table_name, alias, conditions))
+
+        else:
+            self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
+                schema, table_name, alias, conditions))
 
         return self
 
@@ -180,8 +195,13 @@ class SELECT(object):
         alias = target if not isinstance(target, tuple) \
             else target[1]
         
-        self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
-            schema, table_name, alias, conditions))
+        if schema is None:
+            self._joins.append(u"LEFT JOIN {} AS {} ON {}".format(
+                table_name, alias, conditions))
+
+        else:
+            self._joins.append(u"LEFT JOIN {}.{} AS {} ON {}".format(
+                schema, table_name, alias, conditions))            
 
         return self
 
